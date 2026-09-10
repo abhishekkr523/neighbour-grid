@@ -1,0 +1,121 @@
+{
+  "name": "borrower",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/borrower/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@angular-architects/native-federation:build",
+      "defaultConfiguration": "production",
+      "options": {
+        "cacheExternalArtifacts": true,
+        "tsConfig": "apps/borrower/tsconfig.federation.json",
+        "ssr": true
+      },
+      "configurations": {
+        "production": {
+          "target": "borrower:esbuild:production"
+        },
+        "development": {
+          "target": "borrower:esbuild:development",
+          "dev": true
+        }
+      }
+    },
+    "serve": {
+      "executor": "@angular-architects/native-federation:build",
+      "options": {
+        "target": "borrower:serve-original:development",
+        "tsConfig": "apps/borrower/tsconfig.federation.json",
+        "rebuildDelay": 500,
+        "cacheExternalArtifacts": true,
+        "dev": true,
+        "devServer": true,
+        "port": 4201
+      }
+    },
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "options": {
+        "watch": false
+      }
+    },
+    "serve-static": {
+      "continuous": true,
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "borrower:build",
+        "port": 4201,
+        "staticFilePath": "dist/apps/borrower/browser",
+        "spa": true
+      }
+    },
+    "esbuild": {
+      "executor": "@angular/build:application",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/borrower",
+        "browser": "apps/borrower/src/main.ts",
+        "tsConfig": "apps/borrower/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/borrower/public"
+          }
+        ],
+        "styles": ["apps/borrower/src/styles.scss"],
+        "server": "apps/borrower/src/main.server.ts",
+        "ssr": {
+          "entry": "apps/borrower/src/server.ts"
+        },
+        "outputMode": "server",
+        "polyfills": ["es-module-shims"],
+        "security": {
+          "allowedHosts": ["localhost"]
+        }
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kb",
+              "maximumError": "8kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      }
+    },
+    "serve-original": {
+      "continuous": true,
+      "executor": "@angular/build:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "port": 4201
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "borrower:esbuild:production"
+        },
+        "development": {
+          "buildTarget": "borrower:esbuild:development"
+        }
+      }
+    }
+  }
+}

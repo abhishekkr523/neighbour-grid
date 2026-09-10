@@ -1,0 +1,5 @@
+{
+  "admin": "http://localhost:4203/remoteEntry.json",
+  "borrower": "http://localhost:4201/remoteEntry.json",
+  "owner": "http://localhost:4202/remoteEntry.json"
+}

@@ -1,0 +1,121 @@
+{
+  "name": "owner",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/owner/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@angular-architects/native-federation:build",
+      "defaultConfiguration": "production",
+      "options": {
+        "cacheExternalArtifacts": true,
+        "tsConfig": "apps/owner/tsconfig.federation.json",
+        "ssr": true
+      },
+      "configurations": {
+        "production": {
+          "target": "owner:esbuild:production"
+        },
+        "development": {
+          "target": "owner:esbuild:development",
+          "dev": true
+        }
+      }
+    },
+    "serve": {
+      "executor": "@angular-architects/native-federation:build",
+      "options": {
+        "target": "owner:serve-original:development",
+        "tsConfig": "apps/owner/tsconfig.federation.json",
+        "rebuildDelay": 500,
+        "cacheExternalArtifacts": true,
+        "dev": true,
+        "devServer": true,
+        "port": 4202
+      }
+    },
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "options": {
+        "watch": false
+      }
+    },
+    "serve-static": {
+      "continuous": true,
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "owner:build",
+        "port": 4202,
+        "staticFilePath": "dist/apps/owner/browser",
+        "spa": true
+      }
+    },
+    "esbuild": {
+      "executor": "@angular/build:application",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/owner",
+        "browser": "apps/owner/src/main.ts",
+        "tsConfig": "apps/owner/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/owner/public"
+          }
+        ],
+        "styles": ["apps/owner/src/styles.scss"],
+        "server": "apps/owner/src/main.server.ts",
+        "ssr": {
+          "entry": "apps/owner/src/server.ts"
+        },
+        "outputMode": "server",
+        "polyfills": ["es-module-shims"],
+        "security": {
+          "allowedHosts": ["localhost"]
+        }
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kb",
+              "maximumError": "8kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      }
+    },
+    "serve-original": {
+      "continuous": true,
+      "executor": "@angular/build:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "port": 4202
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "owner:esbuild:production"
+        },
+        "development": {
+          "buildTarget": "owner:esbuild:development"
+        }
+      }
+    }
+  }
+}
