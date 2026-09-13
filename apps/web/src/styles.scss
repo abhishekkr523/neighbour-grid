@@ -1,1 +1,144 @@
-/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── BASE RESETS ──────────────────────────────────────────── */
+@layer base {
+  html {
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-obsidian text-white min-h-screen overflow-x-hidden;
+  }
+
+  /* Tabular numerals for pricing */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* ─── GLASS CARD COMPONENT ─────────────────────────────────── */
+@layer components {
+  .glass-card {
+    @apply bg-slate-900/50 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-glass;
+    box-shadow:
+      0 8px 32px 0 rgba(0, 0, 0, 0.37),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .glass-card-hover {
+    @apply glass-card transition-all duration-300 ease-out;
+    &:hover {
+      @apply border-white/20 shadow-card-hover;
+      transform: scale(1.02);
+    }
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  .glass-pill {
+    @apply bg-slate-800/60 backdrop-blur-xl border border-white/10 rounded-full px-4 py-2;
+  }
+
+  .glass-header {
+    @apply bg-slate-900/60 backdrop-blur-2xl border border-white/10 rounded-full shadow-glass;
+  }
+
+  .btn-primary {
+    @apply bg-indigo-electric hover:bg-indigo-500 text-white font-semibold px-6 py-3 rounded-2xl
+           transition-all duration-200 ease-out active:scale-[0.98] hover:shadow-glow-indigo;
+  }
+
+  .btn-emerald {
+    @apply bg-emerald-trust hover:bg-emerald-400 text-white font-semibold px-6 py-3 rounded-2xl
+           transition-all duration-200 ease-out active:scale-[0.98] hover:shadow-glow-emerald;
+  }
+
+  .btn-amber {
+    @apply bg-amber-warning hover:bg-amber-400 text-slate-900 font-semibold px-6 py-3 rounded-2xl
+           transition-all duration-200 ease-out active:scale-[0.98] hover:shadow-glow-amber;
+  }
+
+  .badge-emerald {
+    @apply bg-emerald-trust/20 text-emerald-trust border border-emerald-trust/30 px-3 py-1 rounded-full text-xs font-semibold;
+  }
+
+  .badge-indigo {
+    @apply bg-indigo-electric/20 text-indigo-electric border border-indigo-electric/30 px-3 py-1 rounded-full text-xs font-semibold;
+  }
+
+  .badge-amber {
+    @apply bg-amber-warning/20 text-amber-warning border border-amber-warning/30 px-3 py-1 rounded-full text-xs font-semibold;
+  }
+}
+
+/* ─── AMBIENT GLOW ORBS ────────────────────────────────────── */
+.ambient-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ambient-bg::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  left: -10%;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
+  animation: float 8s ease-in-out infinite;
+}
+
+.ambient-bg::after {
+  content: '';
+  position: absolute;
+  bottom: -20%;
+  right: -10%;
+  width: 700px;
+  height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+  animation: float 10s ease-in-out infinite reverse;
+}
+
+/* ─── SCROLLBAR ────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* ─── ANIMATIONS ───────────────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  33% { transform: translateY(-15px) translateX(10px); }
+  66% { transform: translateY(10px) translateX(-10px); }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}

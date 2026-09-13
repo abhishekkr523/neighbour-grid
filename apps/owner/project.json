@@ -26,6 +26,7 @@
     },
     "serve": {
       "executor": "@angular-architects/native-federation:build",
+      "continuous": true,
       "options": {
         "target": "owner:serve-original:development",
         "tsConfig": "apps/owner/tsconfig.federation.json",

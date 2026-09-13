@@ -3,9 +3,9 @@ import { loadRemoteModule } from "@angular-architects/native-federation";
 
 export const appRoutes: Routes = [
   {
-    path: "",
+    path: "v",
     pathMatch: "full",
-    redirectTo: "admin", // सीधे टेस्ट करने के लिए admin पर भेजें
+    redirectTo: "borrower",
   },
   {
     path: "admin",

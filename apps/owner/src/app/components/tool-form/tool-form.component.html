@@ -1,0 +1,58 @@
+<div class="max-w-2xl mx-auto glass-card p-8">
+  <div class="flex items-center gap-4 mb-6">
+    <a routerLink="/" class="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors">
+      <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+      </svg>
+    </a>
+    <h2 class="text-2xl font-bold text-white">{{ isEditMode ? 'Edit Tool' : 'List a New Tool' }}</h2>
+  </div>
+
+  <form [formGroup]="toolForm" (ngSubmit)="onSubmit()" class="space-y-5">
+    
+    <div>
+      <label class="block text-sm font-medium text-white/70 mb-1">Title</label>
+      <input type="text" formControlName="title" class="w-full bg-obsidian border border-white/10 rounded-xl p-3 text-white placeholder-white/30 focus:border-indigo-electric focus:ring-1 focus:ring-indigo-electric transition-colors" placeholder="e.g. Bosch Hammer Drill">
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-white/70 mb-1">Description</label>
+      <textarea rows="3" formControlName="description" class="w-full bg-obsidian border border-white/10 rounded-xl p-3 text-white placeholder-white/30 focus:border-indigo-electric focus:ring-1 focus:ring-indigo-electric transition-colors" placeholder="Describe the tool condition, accessories included, etc."></textarea>
+    </div>
+
+    <div class="grid grid-cols-2 gap-5">
+      <div>
+        <label class="block text-sm font-medium text-white/70 mb-1">Category</label>
+        <select formControlName="category" class="w-full bg-obsidian border border-white/10 rounded-xl p-3 text-white focus:border-indigo-electric focus:ring-1 focus:ring-indigo-electric transition-colors">
+          <option>Power Tools</option>
+          <option>Hand Tools</option>
+          <option>Gardening</option>
+          <option>Cleaning</option>
+          <option>Woodworking</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-white/70 mb-1">Price per Day (₹)</label>
+        <input type="number" formControlName="price_per_day" class="w-full bg-obsidian border border-white/10 rounded-xl p-3 text-white focus:border-indigo-electric focus:ring-1 focus:ring-indigo-electric transition-colors">
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-5">
+      <div>
+        <label class="block text-sm font-medium text-white/70 mb-1">Security Deposit (₹)</label>
+        <input type="number" formControlName="security_deposit" class="w-full bg-obsidian border border-white/10 rounded-xl p-3 text-white focus:border-indigo-electric focus:ring-1 focus:ring-indigo-electric transition-colors">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-white/70 mb-1">Pickup Address</label>
+        <input type="text" formControlName="address" class="w-full bg-obsidian border border-white/10 rounded-xl p-3 text-white placeholder-white/30 focus:border-indigo-electric focus:ring-1 focus:ring-indigo-electric transition-colors" placeholder="Street, Neighborhood">
+      </div>
+    </div>
+
+    <div class="pt-4 border-t border-white/10 flex justify-end gap-3">
+      <a routerLink="/" class="px-6 py-3 rounded-2xl font-medium text-white/70 hover:bg-white/5 transition-colors">Cancel</a>
+      <button type="submit" [disabled]="toolForm.invalid || isSubmitting" class="btn-primary disabled:opacity-50 disabled:cursor-not-allowed">
+        {{ isSubmitting ? 'Saving...' : (isEditMode ? 'Update Tool' : 'Publish Listing') }}
+      </button>
+    </div>
+  </form>
+</div>

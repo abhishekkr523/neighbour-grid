@@ -1,2 +1,36 @@
-<app-nx-welcome></app-nx-welcome>
-<router-outlet></router-outlet>
+<div class="h-[calc(100vh-140px)] flex flex-col lg:flex-row gap-6">
+  <!-- Left Panel: Map View (60%) -->
+  <div class="hidden lg:block w-[60%] h-full rounded-3xl relative">
+    <app-map-view class="w-full h-full block"></app-map-view>
+  </div>
+
+  <!-- Right Panel: Tool Feed (40%) -->
+  <div class="w-full lg:w-[40%] h-full flex flex-col">
+    <div class="flex items-center justify-between mb-4 px-2">
+      <h2 class="text-xl font-bold text-white">Nearby Tools</h2>
+      <div class="glass-pill text-sm text-white/60 flex items-center gap-2 cursor-pointer hover:bg-white/10 transition-colors">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+        </svg>
+        Filter
+      </div>
+    </div>
+    
+    <!-- Feed List -->
+    <div class="flex-1 overflow-y-auto pr-2 pb-10 space-y-4">
+      <app-tool-card 
+        *ngFor="let tool of tools" 
+        [tool]="tool"
+        (reserve)="openReservationModal($event)">
+      </app-tool-card>
+    </div>
+  </div>
+</div>
+
+<!-- Reservation Modal -->
+<app-reservation-modal
+  [isOpen]="isModalOpen"
+  [tool]="selectedTool"
+  (close)="closeModal()"
+  (confirm)="confirmReservation()">
+</app-reservation-modal>
