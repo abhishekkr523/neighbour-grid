@@ -1,29 +1,139 @@
 <div class="h-[calc(100vh-140px)] flex flex-col lg:flex-row gap-6">
-  <!-- Left Panel: Map View (60%) -->
-  <div class="hidden lg:block w-[60%] h-full rounded-3xl relative">
-    <app-map-view class="w-full h-full block"></app-map-view>
-  </div>
+  <!-- Left Panel: Tool Feed (40%) -->
+  <div
+    class="w-full lg:w-[40%] h-full flex flex-col bg-[#1A1C23]/50 rounded-3xl p-4 border border-white/5"
+  >
+    <div class="flex flex-col mb-4 gap-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-bold text-white" (click)="ok()">
+          Nearby Tools
+        </h2>
+        <button
+          (click)="locateMe()"
+          [disabled]="!isLocating"
+          class="glass-pill text-sm text-[#06B6D4] flex items-center gap-2 cursor-pointer hover:bg-white/10 transition-colors disabled:opacity-50"
+        >
+          <svg
+            *ngIf="isLocating"
+            class="w-4 h-4 animate-spin"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+          <svg
+            *ngIf="!isLocating"
+            class="w-4 h-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+          </svg>
+          Locate Me
+        </button>
+      </div>
 
-  <!-- Right Panel: Tool Feed (40%) -->
-  <div class="w-full lg:w-[40%] h-full flex flex-col">
-    <div class="flex items-center justify-between mb-4 px-2">
-      <h2 class="text-xl font-bold text-white">Nearby Tools</h2>
-      <div class="glass-pill text-sm text-white/60 flex items-center gap-2 cursor-pointer hover:bg-white/10 transition-colors">
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-        </svg>
-        Filter
+      <!-- Radius Slider -->
+      <div class="flex flex-col gap-2">
+        <div class="flex justify-between text-sm text-white/70">
+          <span>Search Radius</span>
+          <span class="font-bold text-white">{{searchRadius}} km</span>
+        </div>
+        <input
+          type="range"
+          min="1"
+          max="10000"
+          [value]="searchRadius"
+          (input)="onRadiusChange($event)"
+          class="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#10B981]"
+        />
       </div>
     </div>
-    
+
     <!-- Feed List -->
     <div class="flex-1 overflow-y-auto pr-2 pb-10 space-y-4">
-      <app-tool-card 
-        *ngFor="let tool of tools" 
-        [tool]="tool"
-        (reserve)="openReservationModal($event)">
-      </app-tool-card>
+      <!-- Loading Skeleton -->
+      <div *ngIf="isLoading" class="space-y-4">
+        <div
+          *ngFor="let i of [1,2,3]"
+          class="w-full h-32 bg-white/5 animate-pulse rounded-2xl"
+        ></div>
+      </div>
+
+      <!-- Empty State -->
+      <div
+        *ngIf="isLoading && tools.length === 0"
+        class="flex flex-col items-center justify-center h-48 text-center px-4"
+      >
+        <svg
+          class="w-12 h-12 text-white/20 mb-3"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+        <p class="text-white/70 text-sm">
+          No tools found in your immediate neighborhood. Expand your radius
+          slider.
+        </p>
+      </div>
+
+      <!-- Tool Cards -->
+      <ng-container *ngIf="!isLoading && tools.length > 0">
+        <div
+          *ngFor="let tool of tools"
+          (mouseenter)="onToolHover(tool.id)"
+          (mouseleave)="onToolLeave()"
+          class="transition-transform transform hover:scale-[1.02]"
+        >
+          <app-tool-card [tool]="tool" (reserve)="openReservationModal($event)">
+          </app-tool-card>
+        </div>
+      </ng-container>
     </div>
+  </div>
+
+  <!-- Right Panel: Map View (60%) -->
+  <div class="hidden lg:block w-[60%] h-full rounded-3xl relative">
+    <app-map-view
+      class="w-full h-full block"
+      [userLat]="userLat"
+      [userLng]="userLng"
+      [radius]="searchRadius"
+      [tools]="tools"
+      [activeToolId]="activeToolId"
+    >
+    </app-map-view>
   </div>
 </div>
 
@@ -32,5 +142,6 @@
   [isOpen]="isModalOpen"
   [tool]="selectedTool"
   (close)="closeModal()"
-  (confirm)="confirmReservation()">
+  (confirm)="confirmReservation($event)"
+>
 </app-reservation-modal>

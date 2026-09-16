@@ -17,7 +17,7 @@ export interface Tool {
 
 @Injectable({ providedIn: 'root' })
 export class ToolService {
-  private apiUrl = '/api/v1/tools';
+  private apiUrl = 'http://localhost:3000/api/v1/tools';
 
   constructor(private http: HttpClient) {}
 

@@ -1,20 +1,19 @@
 <div class="h-full grid grid-cols-1 lg:grid-cols-12 gap-6 pb-10">
-  
+
   <!-- Left Column: Inventory (7 cols) -->
   <div class="lg:col-span-7 flex flex-col gap-6">
     <div class="flex items-center justify-between">
       <h2 class="text-2xl font-bold text-white">Your Inventory</h2>
       <button class="btn-primary py-2 px-4 text-sm flex items-center gap-2">
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
         Add Tool
       </button>
     </div>
-    
+
     <div class="space-y-4">
-      <app-inventory-card 
-        *ngFor="let item of inventory" 
-        [item]="item"
-        (toggleActive)="toggleItemStatus($event)">
+      <app-inventory-card *ngFor="let item of inventory" [item]="item" (toggleActive)="toggleItemStatus($event)">
       </app-inventory-card>
     </div>
   </div>
@@ -25,5 +24,5 @@
     <app-booking-requests></app-booking-requests>
     <app-audit-upload></app-audit-upload>
   </div>
-
+  <router-outlet></router-outlet>
 </div>

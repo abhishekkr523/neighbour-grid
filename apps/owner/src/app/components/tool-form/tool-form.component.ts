@@ -55,7 +55,7 @@ export class ToolFormComponent implements OnInit {
 
     if (this.isEditMode && this.toolId) {
       this.toolService.updateTool(this.toolId, formData).subscribe({
-        next: () => this.router.navigate(['/']),
+        next: () => this.router.navigate(['/owner']),
         error: (err) => {
           alert('Error updating tool: ' + (err.error?.error || err.message));
           this.isSubmitting = false;
@@ -63,7 +63,7 @@ export class ToolFormComponent implements OnInit {
       });
     } else {
       this.toolService.createTool(formData).subscribe({
-        next: () => this.router.navigate(['/']),
+        next: () => this.router.navigate(['/owner']),
         error: (err) => {
           alert('Error creating tool: ' + (err.error?.error || err.message));
           this.isSubmitting = false;

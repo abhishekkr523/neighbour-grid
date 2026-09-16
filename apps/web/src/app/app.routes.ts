@@ -3,7 +3,21 @@ import { loadRemoteModule } from "@angular-architects/native-federation";
 
 export const appRoutes: Routes = [
   {
-    path: "v",
+    path: "login",
+    loadComponent: () =>
+      import("./components/login/login.component").then(
+        (m) => m.LoginComponent,
+      ),
+  },
+  {
+    path: "signup",
+    loadComponent: () =>
+      import("./components/signup/signup.component").then(
+        (m) => m.SignupComponent,
+      ),
+  },
+  {
+    path: "",
     pathMatch: "full",
     redirectTo: "borrower",
   },
@@ -25,10 +39,10 @@ export const appRoutes: Routes = [
   },
   {
     path: "owner",
-    loadComponent: () =>
+    loadChildren: () =>
       loadRemoteModule({
         remoteName: "owner",
-        exposedModule: "./Component",
-      }).then((m) => m.App ?? m.AppComponent),
+        exposedModule: "./Routes",
+      }).then((m) => m.appRoutes ?? m.AppComponent),
   },
 ];

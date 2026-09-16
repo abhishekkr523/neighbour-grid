@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 import { RouterModule, RouterOutlet } from "@angular/router";
 import { CommonModule } from "@angular/common";
+import { AuthService } from "./services/auth.service";
 
 @Component({
   imports: [CommonModule, RouterModule, RouterOutlet],
@@ -9,6 +10,8 @@ import { CommonModule } from "@angular/common";
   styleUrl: "./app.scss",
 })
 export class App {
+  constructor(public authService: AuthService) {}
+
   activeRole: "borrower" | "owner" | "admin" = "borrower";
   locationLabel = "Indiranagar, Sector 4";
   radiusKm = 2.5;
@@ -31,5 +34,8 @@ export class App {
 
   dismissNotification() {
     this.showNotification = false;
+  }
+  logout() {
+    this.authService.logout();
   }
 }

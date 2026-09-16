@@ -3,28 +3,56 @@
 
 <!-- Main Layout -->
 <div class="relative z-10 min-h-screen flex flex-col">
-
   <!-- ═══ FLOATING PILL HEADER ═══ -->
   <header class="sticky top-0 z-50 px-4 pt-4">
-    <div class="glass-header mx-auto max-w-7xl flex items-center justify-between px-6 py-3">
-
+    <div
+      class="glass-header mx-auto max-w-7xl flex items-center justify-between px-6 py-3"
+    >
       <!-- Left: Logo + Location -->
       <div class="flex items-center gap-4">
         <!-- Logo -->
         <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-trust to-indigo-electric flex items-center justify-center">
-            <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
+          <div
+            class="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-trust to-indigo-electric flex items-center justify-center"
+          >
+            <svg
+              class="w-4 h-4 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2.5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M4 6h16M4 12h16m-7 6h7"
+              />
             </svg>
           </div>
-          <span class="text-lg font-bold tracking-tight hidden sm:inline">Neighbor<span class="text-emerald-trust">Grid</span></span>
+          <span class="text-lg font-bold tracking-tight hidden sm:inline"
+            >Neighbor<span class="text-emerald-trust">Grid</span></span
+          >
         </div>
 
         <!-- Location Pill -->
         <div class="glass-pill flex items-center gap-2 text-sm">
-          <svg class="w-4 h-4 text-emerald-trust" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          <svg
+            class="w-4 h-4 text-emerald-trust"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+            />
           </svg>
           <span class="text-white/80">{{ locationLabel }}</span>
           <span class="text-white/40">•</span>
@@ -33,7 +61,9 @@
       </div>
 
       <!-- Center: Role Switcher Tabs -->
-      <nav class="hidden md:flex items-center bg-slate-800/40 rounded-full p-1 border border-white/5">
+      <nav
+        class="hidden md:flex items-center bg-slate-800/40 rounded-full p-1 border border-white/5"
+      >
         <a
           routerLink="/borrower"
           (click)="switchRole('borrower')"
@@ -41,7 +71,19 @@
           [class]="activeRole === 'borrower' ? 'bg-indigo-electric text-white shadow-glow-indigo' : 'text-white/50 hover:text-white/80'"
         >
           <span class="flex items-center gap-1.5">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
             Borrower
           </span>
         </a>
@@ -52,7 +94,19 @@
           [class]="activeRole === 'owner' ? 'bg-emerald-trust text-white shadow-glow-emerald' : 'text-white/50 hover:text-white/80'"
         >
           <span class="flex items-center gap-1.5">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+              />
+            </svg>
             Owner
           </span>
         </a>
@@ -63,42 +117,103 @@
           [class]="activeRole === 'admin' ? 'bg-amber-warning text-slate-900 shadow-glow-amber' : 'text-white/50 hover:text-white/80'"
         >
           <span class="flex items-center gap-1.5">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+              />
+            </svg>
             Admin
           </span>
         </a>
       </nav>
 
-      <!-- Right: Escrow Badge + Avatar -->
+      <!-- User Profile / Auth (Dynamic) -->
       <div class="flex items-center gap-3">
-        <!-- Escrow Wallet Badge -->
-        <div class="glass-pill flex items-center gap-2 text-sm">
-          <div class="w-2 h-2 rounded-full bg-emerald-trust animate-pulse"></div>
-          <span class="text-white/60">Escrow</span>
-          <span class="text-emerald-trust font-semibold tabular-nums">{{ escrowDisplay }}</span>
-        </div>
+        <!-- Logged Out State -->
+        <ng-container *ngIf="!authService.isAuthenticated()">
+          <a
+            routerLink="/login"
+            class="text-sm font-semibold text-white/70 hover:text-white transition-colors px-3 py-2"
+          >
+            Log in
+          </a>
+          <a
+            routerLink="/signup"
+            class="text-sm font-bold text-white bg-indigo-electric hover:bg-indigo-500 px-4 py-2 rounded-xl transition-all shadow-lg shadow-indigo-500/20"
+          >
+            Sign up
+          </a>
+        </ng-container>
 
-        <!-- Avatar -->
-        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-electric to-purple-500 flex items-center justify-center text-sm font-bold cursor-pointer hover:scale-105 transition-transform">
-          A
-        </div>
+        <!-- Logged In State -->
+        <ng-container *ngIf="authService.isAuthenticated()">
+          <!-- Optional Escrow Badge -->
+          <div
+            class="hidden sm:flex items-center gap-2 bg-emerald-trust/10 border border-emerald-trust/20 px-3 py-1.5 rounded-full mr-2"
+          >
+            <div
+              class="w-2 h-2 rounded-full bg-emerald-trust animate-pulse"
+            ></div>
+            <span class="text-xs font-bold text-emerald-trust">Escrow ₹15</span>
+          </div>
+
+          <button
+            (click)="logout()"
+            class="text-sm font-semibold text-white/70 hover:text-red-400 transition-colors px-3 py-2"
+          >
+            Logout
+          </button>
+          <div
+            class="w-10 h-10 rounded-full bg-indigo-electric text-white flex items-center justify-center font-bold shadow-lg shadow-indigo-electric/20"
+          >
+            {{ authService.currentUser()?.name?.charAt(0)?.toUpperCase() || 'U'
+            }}
+          </div>
+        </ng-container>
       </div>
     </div>
   </header>
 
   <!-- ═══ ESCROW NOTIFICATION BANNER ═══ -->
   <div *ngIf="showNotification" class="px-4 mt-3 animate-slide-up">
-    <div class="mx-auto max-w-7xl glass-pill flex items-center justify-between py-2 px-5">
+    <div
+      class="mx-auto max-w-7xl glass-pill flex items-center justify-between py-2 px-5"
+    >
       <div class="flex items-center gap-3 text-sm">
         <div class="w-2 h-2 rounded-full bg-amber-warning animate-pulse"></div>
         <span class="text-white/70">Active Escrow Release:</span>
-        <span class="text-amber-warning font-semibold tabular-nums">{{ escrowCountdownHours }}h remaining</span>
+        <span class="text-amber-warning font-semibold tabular-nums"
+          >{{ escrowCountdownHours }}h remaining</span
+        >
         <span class="text-white/40">•</span>
-        <span class="text-white/50">Bosch Drill rental deposit of ₹1,500 pending return inspection</span>
+        <span class="text-white/50"
+          >Bosch Drill rental deposit of ₹1,500 pending return inspection</span
+        >
       </div>
-      <button (click)="dismissNotification()" class="text-white/30 hover:text-white/60 transition-colors">
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      <button
+        (click)="dismissNotification()"
+        class="text-white/30 hover:text-white/60 transition-colors"
+      >
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6 18L18 6M6 6l12 12"
+          />
         </svg>
       </button>
     </div>
@@ -106,20 +221,31 @@
 
   <!-- ═══ MOBILE ROLE TABS ═══ -->
   <div class="md:hidden px-4 mt-3">
-    <div class="flex items-center bg-slate-800/40 rounded-full p-1 border border-white/5">
-      <a routerLink="/borrower" (click)="switchRole('borrower')"
-         class="flex-1 text-center px-3 py-2 rounded-full text-xs font-medium transition-all duration-300"
-         [class]="activeRole === 'borrower' ? 'bg-indigo-electric text-white' : 'text-white/50'">
+    <div
+      class="flex items-center bg-slate-800/40 rounded-full p-1 border border-white/5"
+    >
+      <a
+        routerLink="/borrower"
+        (click)="switchRole('borrower')"
+        class="flex-1 text-center px-3 py-2 rounded-full text-xs font-medium transition-all duration-300"
+        [class]="activeRole === 'borrower' ? 'bg-indigo-electric text-white' : 'text-white/50'"
+      >
         Borrower
       </a>
-      <a routerLink="/owner" (click)="switchRole('owner')"
-         class="flex-1 text-center px-3 py-2 rounded-full text-xs font-medium transition-all duration-300"
-         [class]="activeRole === 'owner' ? 'bg-emerald-trust text-white' : 'text-white/50'">
+      <a
+        routerLink="/owner"
+        (click)="switchRole('owner')"
+        class="flex-1 text-center px-3 py-2 rounded-full text-xs font-medium transition-all duration-300"
+        [class]="activeRole === 'owner' ? 'bg-emerald-trust text-white' : 'text-white/50'"
+      >
         Owner
       </a>
-      <a routerLink="/admin" (click)="switchRole('admin')"
-         class="flex-1 text-center px-3 py-2 rounded-full text-xs font-medium transition-all duration-300"
-         [class]="activeRole === 'admin' ? 'bg-amber-warning text-slate-900' : 'text-white/50'">
+      <a
+        routerLink="/admin"
+        (click)="switchRole('admin')"
+        class="flex-1 text-center px-3 py-2 rounded-full text-xs font-medium transition-all duration-300"
+        [class]="activeRole === 'admin' ? 'bg-amber-warning text-slate-900' : 'text-white/50'"
+      >
         Admin
       </a>
     </div>
@@ -134,7 +260,9 @@
 
   <!-- ═══ FOOTER ═══ -->
   <footer class="px-4 py-6">
-    <div class="mx-auto max-w-7xl glass-pill flex items-center justify-between px-6 py-3 text-xs text-white/30">
+    <div
+      class="mx-auto max-w-7xl glass-pill flex items-center justify-between px-6 py-3 text-xs text-white/30"
+    >
       <span>© 2026 NeighborGrid</span>
       <div class="flex items-center gap-1">
         <div class="w-1.5 h-1.5 rounded-full bg-emerald-trust"></div>
@@ -142,5 +270,4 @@
       </div>
     </div>
   </footer>
-
 </div>

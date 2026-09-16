@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Tool } from '../services/tools.mock';
+import { Tool } from '../app';
 
 @Component({
   selector: 'app-tool-card',
@@ -40,7 +40,7 @@ import { Tool } from '../services/tools.mock';
         <!-- Owner Info -->
         <div class="flex items-center gap-2 mb-3 mt-1">
           <div class="w-6 h-6 rounded-full bg-indigo-electric/30 flex items-center justify-center text-xs font-bold text-indigo-300">
-            {{tool.ownerName.charAt(0)}}
+            {{tool.ownerName?.charAt(0) || 'N'}}
           </div>
           <span class="text-sm text-white/60">{{tool.ownerName}}</span>
           <span class="text-white/30 text-xs">•</span>
