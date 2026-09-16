@@ -65,6 +65,7 @@ import { Tool } from "../app";
                   >Tomorrow, 10:00 AM</span
                 >
               </div>
+
               <div
                 class="flex-1 glass-pill bg-obsidian/50 py-3 flex flex-col px-4 cursor-pointer hover:bg-white/5"
               >
