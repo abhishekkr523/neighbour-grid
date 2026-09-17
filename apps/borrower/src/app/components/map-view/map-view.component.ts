@@ -9,7 +9,7 @@ import {
   PLATFORM_ID,
 } from "@angular/core";
 import { CommonModule, isPlatformBrowser } from "@angular/common";
-import { Tool } from "../app";
+import { Tool } from "../../app";
 import * as LeafletModule from "leaflet";
 const L: any =
   (LeafletModule as any).default?.default ??
@@ -19,123 +19,8 @@ const L: any =
   selector: "app-map-view",
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <div
-      class="relative w-full h-full bg-[#1A1C23] rounded-3xl overflow-hidden border border-white/5 shadow-inner"
-    >
-      <div id="map" class="w-full h-full z-0"></div>
-
-      <!-- Overlay controls (can be adjusted via CSS if needed, or we use Leaflet controls) -->
-      <div class="absolute top-6 left-6 z-10">
-        <div
-          class="glass-pill text-xs font-medium text-white flex items-center gap-2 bg-[#1A1C23]/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 shadow-lg"
-        >
-          <span class="w-2 h-2 rounded-full bg-[#10B981]"></span>
-          Available Nearby ({{ tools.length }})
-        </div>
-      </div>
-    </div>
-  `,
-  styles: [
-    `
-      /* Leaflet overrides for dark theme */
-      :host ::ng-deep .leaflet-tile {
-        position: absolute;
-      }
-      :host ::ng-deep .leaflet-marker-icon {
-        position: absolute;
-        left: 0;
-        top: 0;
-      }
-
-      :host ::ng-deep .leaflet-marker-shadow {
-        position: absolute;
-      }
-
-      :host ::ng-deep .leaflet-marker-pane {
-        z-index: 6;
-      }
-      :host ::ng-deep .leaflet-container {
-        background: #1a1c23;
-        font-family: inherit;
-      }
-      :host ::ng-deep .leaflet-popup-content-wrapper {
-        background: rgba(26, 28, 35, 0.9);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: white;
-        border-radius: 12px;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-      }
-      :host ::ng-deep .leaflet-popup-tip {
-        background: rgba(26, 28, 35, 0.9);
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        border-left: 1px solid rgba(255, 255, 255, 0.1);
-      }
-      :host ::ng-deep .leaflet-popup-content {
-        margin: 12px;
-        font-weight: 500;
-      }
-      :host ::ng-deep .leaflet-control-zoom {
-        border: none !important;
-        background: transparent !important;
-        box-shadow: none !important;
-      }
-      :host ::ng-deep .leaflet-control-zoom a {
-        background-color: rgba(26, 28, 35, 0.8) !important;
-        backdrop-filter: blur(8px);
-        color: rgba(255, 255, 255, 0.7) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        border-radius: 8px !important;
-        margin-bottom: 8px;
-      }
-      :host ::ng-deep .leaflet-control-zoom a:hover {
-        background-color: rgba(255, 255, 255, 0.1) !important;
-        color: white !important;
-      }
-
-      /* Custom Marker CSS */
-      /* ================================
-   Leaflet Custom Markers
-   ================================ */
-
-      :host ::ng-deep .tool-marker {
-        display: flex !important;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        background: transparent !important;
-        border: none !important;
-      }
-
-      :host ::ng-deep .tool-marker .dot {
-        width: 20px;
-        height: 20px;
-        background: #10b981;
-        border: 3px solid white;
-        border-radius: 50%;
-        box-shadow: 0 0 12px #10b981;
-      }
-
-      :host ::ng-deep .tool-marker.active .dot {
-        transform: scale(1.3);
-        background: #34d399;
-        box-shadow: 0 0 20px #10b981;
-      }
-
-      @keyframes map-pulse {
-        0% {
-          transform: scale(1);
-          opacity: 0.8;
-        }
-
-        100% {
-          transform: scale(3.5);
-          opacity: 0;
-        }
-      }
-    `,
-  ],
+  templateUrl: "map-view.component.html",
+  styleUrl: "map-view.component.scss",
 })
 export class MapViewComponent implements OnInit, OnChanges, OnDestroy {
   @Input() userLat: number = 28.6139;

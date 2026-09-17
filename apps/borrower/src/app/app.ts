@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { HttpClient, HttpClientModule } from "@angular/common/http";
-import { ToolCardComponent } from "./components/tool-card.component";
-import { MapViewComponent } from "./components/map-view.component";
-import { ReservationModalComponent } from "./components/reservation-modal.component";
+import { ToolCardComponent } from "./components/tool-card/tool-card.component";
+import { MapViewComponent } from "./components/map-view/map-view.component";
+import { ReservationModalComponent } from "./components/reservation-modal/reservation-modal.component";
 
 // Define the Tool interface based on the backend schema
 export interface Tool {
@@ -57,7 +57,7 @@ export class App implements OnInit {
   constructor(
     private http: HttpClient,
     private cdr: ChangeDetectorRef,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.locateMe();

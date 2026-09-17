@@ -1,0 +1,80 @@
+<div class="glass-card-hover p-4 flex flex-col gap-3 relative overflow-hidden group cursor-pointer"
+    (click)="reserve.emit(tool)">
+    <!-- Verified Audit Badge -->
+    <div *ngIf="tool.hasVerifiedAudit" class="absolute top-6 left-6 z-10">
+        <div
+            class="bg-emerald-trust/90 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg border border-emerald-300/30">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            Verified Audit
+        </div>
+    </div>
+
+    <!-- Distance Badge -->
+    <div class="absolute top-6 right-6 z-10">
+        <div
+            class="bg-obsidian/70 backdrop-blur-md text-white text-xs font-medium px-2.5 py-1 rounded-full border border-white/10">
+            {{tool.distanceKm}} km
+        </div>
+    </div>
+
+    <!-- Image -->
+    <div class="h-48 w-full rounded-2xl overflow-hidden relative">
+        <img [src]="tool.imageUrl" [alt]="tool.title"
+            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+        <div class="absolute inset-0 bg-gradient-to-t from-obsidian/80 to-transparent"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="flex-1 flex flex-col">
+        <div class="flex justify-between items-start mb-1">
+            <h3 class="font-bold text-lg leading-tight text-white/90 group-hover:text-white transition-colors">
+                {{tool.title}}</h3>
+        </div>
+
+        <!-- Owner Info -->
+        <div class="flex items-center gap-2 mb-3 mt-1">
+            <div
+                class="w-6 h-6 rounded-full bg-indigo-electric/30 flex items-center justify-center text-xs font-bold text-indigo-300">
+                {{tool.ownerName?.charAt(0) || 'N'}}
+            </div>
+            <span class="text-sm text-white/60">{{tool.ownerName}}</span>
+            <span class="text-white/30 text-xs">•</span>
+            <div class="flex items-center gap-1">
+                <span class="text-amber-warning text-sm">★</span>
+                <span class="text-sm font-medium text-white/80">{{tool.ownerRating}}</span>
+                <span class="text-xs text-white/40">({{tool.loanCount}})</span>
+            </div>
+        </div>
+
+        <p class="text-sm text-white/50 line-clamp-2 mb-4">{{tool.description}}</p>
+
+        <div class="mt-auto">
+            <!-- Pricing -->
+            <div class="flex flex-col gap-1.5 mb-4">
+                <div class="flex items-end gap-1">
+                    <span class="text-xl font-bold tabular-nums text-emerald-400">₹{{tool.pricePerDay}}</span>
+                    <span class="text-xs text-white/40 mb-1">/ day</span>
+                </div>
+                <div class="flex items-center gap-1.5 text-xs">
+                    <svg class="w-3.5 h-3.5 text-amber-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    <span class="text-white/50">₹{{tool.securityDeposit}} Deposit (Auto-Escrow)</span>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <button class="w-full btn-primary py-2.5 text-sm flex items-center justify-center gap-2 group/btn">
+                Instant Reserve
+                <svg class="w-4 h-4 transition-transform group-hover/btn:translate-x-1" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+            </button>
+        </div>
+    </div>
+</div>
