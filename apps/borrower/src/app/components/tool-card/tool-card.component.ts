@@ -12,4 +12,5 @@ import { Tool } from '../../app';
 export class ToolCardComponent {
   @Input() tool!: Tool;
   @Output() reserve = new EventEmitter<Tool>();
+  @Output() chat = new EventEmitter<string>();
 }

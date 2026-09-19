@@ -116,7 +116,11 @@
           (mouseleave)="onToolLeave()"
           class="transition-transform transform hover:scale-[1.02]"
         >
-          <app-tool-card [tool]="tool" (reserve)="openReservationModal($event)">
+          <app-tool-card
+            [tool]="tool"
+            (reserve)="openReservationModal($event)"
+            (chat)="openChat($event)"
+          >
           </app-tool-card>
         </div>
       </ng-container>
@@ -139,9 +143,17 @@
 
 <!-- Reservation Modal -->
 <app-reservation-modal
-  [isOpen]="isModalOpen"
+  *ngIf="isModalOpen && selectedTool"
   [tool]="selectedTool"
   (close)="closeModal()"
   (confirm)="confirmReservation($event)"
+></app-reservation-modal>
+
+<!-- Chat UI -->
+<app-chat-ui
+  class="fixed bottom-4 right-4 w-[350px] h-[500px] bg-[#1A1C23]/90 rounded-3xl shadow-lg border border-white/5 z-50"
+  *ngIf="activeChatOwnerId"
+  [ownerId]="activeChatOwnerId"
+  [borrowerId]="currentUserId"
 >
-</app-reservation-modal>
+</app-chat-ui>

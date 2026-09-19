@@ -16,4 +16,9 @@ export const appRoutes: Route[] = [
     loadComponent: () =>
       import('./components/tool-form/tool-form.component').then((m) => m.ToolFormComponent),
   },
+  {
+    path: 'chat',
+    loadComponent: () =>
+      import('./components/chat-page/chat-page.component').then((m) => m.ChatPageComponent),
+  }
 ];

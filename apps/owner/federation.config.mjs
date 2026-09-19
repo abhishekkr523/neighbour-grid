@@ -28,6 +28,7 @@ export default withNativeFederation({
     'rxjs/fetch',
     'rxjs/testing',
     'rxjs/webSocket',
+    'socket.io-client'
     // Add further packages you don't need at runtime
   ],
 

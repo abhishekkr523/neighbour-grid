@@ -4,6 +4,8 @@ import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { ToolCardComponent } from "./components/tool-card/tool-card.component";
 import { MapViewComponent } from "./components/map-view/map-view.component";
 import { ReservationModalComponent } from "./components/reservation-modal/reservation-modal.component";
+import { ChatUIComponent } from "./components/chat-ui/chat-ui.component";
+import { WebsocketService } from "../../../../libs/shared/websocket/src/lib/websocket.service";
 
 // Define the Tool interface based on the backend schema
 export interface Tool {
@@ -36,6 +38,7 @@ export interface Tool {
     ToolCardComponent,
     MapViewComponent,
     ReservationModalComponent,
+    ChatUIComponent,
   ],
   templateUrl: "./app.html",
   styleUrl: "./app.scss",
@@ -47,6 +50,8 @@ export class App implements OnInit {
   isModalOpen = false;
   isLoading = false;
   isLocating = false;
+  activeChatOwnerId: string | null = null;
+  currentUserId = ""; // Mock ID, normally from Auth service
 
   // Default coordinates (e.g., New Delhi if geolocation fails)
   userLat = 25.5941;
@@ -57,10 +62,15 @@ export class App implements OnInit {
   constructor(
     private http: HttpClient,
     private cdr: ChangeDetectorRef,
-  ) { }
+    private wsService: WebsocketService,
+  ) {}
 
   ngOnInit() {
+    const userString = localStorage.getItem("ng_user");
+    this.currentUserId = userString ? JSON.parse(userString).id : undefined;
     this.locateMe();
+    const token = localStorage.getItem("ng_token") || "{}";
+    this.wsService.connect("http://localhost:3000", token);
   }
 
   locateMe() {
@@ -148,5 +158,10 @@ export class App implements OnInit {
   confirmReservation(tool: Tool) {
     alert(`Reservation requested for ${tool.title}!`);
     this.closeModal();
+  }
+
+  openChat(ownerId: string) {
+    // For demo purposes, we're opening chat with a mock owner if none provided
+    this.activeChatOwnerId = ownerId;
   }
 }

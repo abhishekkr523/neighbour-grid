@@ -3,9 +3,14 @@ import { provideRouter } from '@angular/router';
 import { appRoutes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 
+import { provideHttpClient } from '@angular/common/http';
+import { CHAT_API_URL } from '@neighbour-grid/chat';
+
 export const appConfig: ApplicationConfig = {
-  providers: [provideClientHydration(withEventReplay()),
+  providers: [
+    provideClientHydration(withEventReplay()),
     provideBrowserGlobalErrorListeners(),
-    provideRouter(appRoutes)
+    provideRouter(appRoutes),
+    provideHttpClient()
   ]
 };

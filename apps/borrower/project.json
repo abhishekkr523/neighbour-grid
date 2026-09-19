@@ -12,7 +12,7 @@
       "options": {
         "cacheExternalArtifacts": true,
         "tsConfig": "apps/borrower/tsconfig.federation.json",
-        "ssr": true
+        "ssr": false
       },
       "configurations": {
         "production": {
@@ -69,12 +69,8 @@
           }
         ],
         "styles": ["apps/borrower/src/styles.scss"],
-        "server": "apps/borrower/src/main.server.ts",
-        "ssr": {
-          "entry": "apps/borrower/src/server.ts"
-        },
-        "outputMode": "server",
         "polyfills": ["es-module-shims"],
+        "prerender": false,
         "security": {
           "allowedHosts": ["localhost"]
         }

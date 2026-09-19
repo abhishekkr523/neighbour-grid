@@ -1,6 +1,8 @@
 {
   "extends": "./tsconfig.app.json",
   "files": [
+    "../../libs/shared/chat/src/index.ts",
+    "../../libs/shared/websocket/src/index.ts",
     "src/app/app.ts",
     "src/app/app.routes.ts"
   ],
