@@ -2,9 +2,10 @@ import { Component } from "@angular/core";
 import { RouterModule, RouterOutlet } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { AuthService } from "./services/auth.service";
+import { SpinnerComponent } from "./components/spinner/spinner.component";
 
 @Component({
-  imports: [CommonModule, RouterModule, RouterOutlet],
+  imports: [CommonModule, RouterModule, RouterOutlet, SpinnerComponent],
   selector: "app-root",
   templateUrl: "./app.html",
   styleUrl: "./app.scss",

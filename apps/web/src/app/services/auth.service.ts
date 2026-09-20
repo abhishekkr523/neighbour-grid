@@ -64,6 +64,16 @@ export class AuthService {
     });
   }
 
+  refreshToken(): Observable<{ accessToken: string, refreshToken: string }> {
+    const refreshToken = localStorage.getItem("ng_refresh_token");
+    return this.http.post<{ accessToken: string, refreshToken: string }>(`${this.apiUrl}/refresh`, { refreshToken }).pipe(
+      tap((res) => {
+        localStorage.setItem("ng_token", res.accessToken);
+        localStorage.setItem("ng_refresh_token", res.refreshToken);
+      })
+    );
+  }
+
   private handleAuthSuccess(res: AuthResponse) {
     localStorage.setItem("ng_token", res.accessToken);
     localStorage.setItem("ng_refresh_token", res.refreshToken);

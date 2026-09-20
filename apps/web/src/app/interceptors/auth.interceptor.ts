@@ -1,17 +1,79 @@
-import { HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { AuthService } from '../services/auth.service';
+import { HttpErrorResponse, HttpInterceptorFn } from "@angular/common/http";
+import { inject } from "@angular/core";
+import { AuthService } from "../services/auth.service";
+import {
+  catchError,
+  switchMap,
+  throwError,
+  BehaviorSubject,
+  filter,
+  take,
+} from "rxjs";
+
+let isRefreshing = false;
+let refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const token = authService.getToken();
 
+  let authReq = req;
   if (token) {
-    const clonedReq = req.clone({
-      headers: req.headers.set('Authorization', `Bearer ${token}`)
+    authReq = req.clone({
+      headers: req.headers.set("Authorization", `Bearer ${token}`),
     });
-    return next(clonedReq);
   }
 
-  return next(req);
+  return next(authReq).pipe(
+    catchError((error) => {
+      if (
+        error instanceof HttpErrorResponse &&
+        error.status === 401 &&
+        !authReq.url.includes("/auth/login") &&
+        !authReq.url.includes("/auth/refresh")
+      ) {
+        return handle401Error(authReq, next, authService);
+      }
+      return throwError(() => error);
+    }),
+  );
 };
+
+function handle401Error(request: any, next: any, authService: AuthService) {
+  if (!isRefreshing) {
+    isRefreshing = true;
+    refreshTokenSubject.next(null);
+
+    return authService.refreshToken().pipe(
+      switchMap((tokenResponse: any) => {
+        isRefreshing = false;
+        refreshTokenSubject.next(tokenResponse.accessToken);
+        return next(
+          request.clone({
+            headers: request.headers.set(
+              "Authorization",
+              `Bearer ${tokenResponse.accessToken}`,
+            ),
+          }),
+        );
+      }),
+      catchError((err) => {
+        isRefreshing = false;
+        authService.logout();
+        return throwError(() => err);
+      }),
+    );
+  } else {
+    return refreshTokenSubject.pipe(
+      filter((token) => token != null),
+      take(1),
+      switchMap((jwt) => {
+        return next(
+          request.clone({
+            headers: request.headers.set("Authorization", `Bearer ${jwt}`),
+          }),
+        );
+      }),
+    );
+  }
+}
