@@ -1,1 +1,482 @@
-<p>Chat works!</p>
+<div class="h-[100vh] flex gap-6 bg-[#0A0C14] p-1">
+  <!-- ============ Sidebar ============ -->
+  <div
+    class="w-[340px] shrink-0 flex flex-col rounded-[24px] border border-white/5 bg-[#10121A] shadow-2xl overflow-hidden"
+  >
+    <div class="p-6 pb-2">
+      <h2
+        class="text-xl font-bold text-white tracking-tight flex items-center gap-3"
+      >
+        <svg
+          class="w-6 h-6 text-indigo-400"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+          />
+        </svg>
+        Messages
+      </h2>
+    </div>
+
+    <!-- Search -->
+    <div class="px-6 py-4">
+      <div class="relative">
+        <svg
+          class="w-4 h-4 text-white/40 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          />
+        </svg>
+        <input
+          type="text"
+          placeholder="Search chats..."
+          style="background-color: #1c1f2e; color: #fff"
+          class="w-full border border-white/5 rounded-[16px] py-2.5 pl-11 pr-4 text-sm placeholder-white/40 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all"
+        />
+      </div>
+    </div>
+
+    <!-- Conversation list -->
+    <div class="flex-1 overflow-y-auto custom-scrollbar px-3 pb-4 space-y-1">
+      <div
+        *ngIf="conversations.length === 0"
+        class="flex flex-col items-center justify-center h-full text-white/40 p-6 text-center gap-3"
+      >
+        <svg
+          class="w-12 h-12 opacity-40"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+          />
+        </svg>
+        <p class="text-sm">No conversations yet.</p>
+      </div>
+
+      <button
+        type="button"
+        *ngFor="let conv of conversations"
+        (click)="selectConversation(conv)"
+        class="w-full text-left p-3.5 rounded-[18px] cursor-pointer transition-all flex items-start gap-3.5 border"
+        [ngClass]="activeConversation?.id === conv.id
+          ? 'bg-gradient-to-r from-indigo-500/20 to-purple-500/10 border-indigo-500/30'
+          : 'border-transparent hover:bg-white/5'"
+      >
+        <div class="relative shrink-0">
+          <div
+            class="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-semibold text-lg shadow-lg"
+          >
+            {{ (conv.other_user_name || 'U').charAt(0).toUpperCase() }}
+          </div>
+          <div
+            class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-[#22C55E] border-[2.5px] border-[#10121A] rounded-full"
+          ></div>
+        </div>
+
+        <div class="flex-1 min-w-0">
+          <div class="flex justify-between items-center mb-1 gap-2">
+            <h3 class="font-semibold text-white truncate">
+              {{ conv.other_user_name || 'User' }}
+            </h3>
+            <span class="text-[11px] text-white/40 whitespace-nowrap shrink-0">
+              {{ conv.last_message_time | date:'shortTime' }}
+            </span>
+          </div>
+
+          <div
+            class="flex items-center gap-1.5 text-[11px] text-[#22C55E] mb-1"
+          >
+            <div class="w-1.5 h-1.5 rounded-full bg-[#22C55E]"></div>
+            Online
+          </div>
+
+          <div class="flex justify-between items-center gap-2">
+            <p
+              class="text-sm truncate flex-1"
+              [ngClass]="conv.unread_count > 0 ? 'font-medium text-white/90' : 'text-white/50'"
+            >
+              {{ conv.last_message || 'Started a conversation' }}
+            </p>
+            <span
+              *ngIf="conv.unread_count > 0"
+              class="min-w-[20px] h-5 px-1.5 rounded-full bg-indigo-500 flex items-center justify-center text-[10px] font-bold text-white shrink-0"
+            >
+              {{ conv.unread_count }}
+            </span>
+          </div>
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <!-- ============ Chat window ============ -->
+  <div
+    class="flex-1 flex flex-col rounded-[24px] border border-white/5 bg-[#10121A] shadow-2xl relative overflow-hidden"
+  >
+    <div
+      *ngIf="!activeConversation"
+      class="absolute inset-0 flex flex-col items-center justify-center z-10 px-6"
+    >
+      <div
+        class="w-24 h-24 rounded-full bg-[#1C1F2E] flex items-center justify-center mb-6"
+      >
+        <svg
+          class="w-10 h-10 text-white/30"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+          />
+        </svg>
+      </div>
+      <h2 class="text-2xl font-bold text-white mb-2">Select a Conversation</h2>
+      <p class="text-white/40 max-w-md text-center text-sm">
+        Choose a chat from the left menu.
+      </p>
+    </div>
+
+    <ng-container *ngIf="activeConversation">
+      <!-- Header -->
+      <div
+        class="px-6 py-4 flex items-center justify-between border-b border-white/5 bg-[#10121A]/90 backdrop-blur"
+      >
+        <div class="flex items-center gap-4">
+          <button
+            type="button"
+            class="text-white/60 hover:text-white transition-colors"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
+            </svg>
+          </button>
+
+          <div class="relative">
+            <div
+              class="w-11 h-11 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-semibold text-base shadow-lg"
+            >
+              {{ (activeConversation.other_user_name ||
+              'U').charAt(0).toUpperCase() }}
+            </div>
+            <div
+              class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-[#22C55E] border-[2.5px] border-[#10121A] rounded-full"
+            ></div>
+          </div>
+
+          <div>
+            <h2 class="font-bold text-white text-base leading-tight">
+              {{ activeConversation.other_user_name || 'User' }}
+            </h2>
+            <div class="flex items-center gap-2 text-xs mt-1">
+              <div class="flex items-center gap-1.5 text-[#22C55E]">
+                <div class="w-1.5 h-1.5 rounded-full bg-[#22C55E]"></div>
+                Online
+              </div>
+              <span
+                class="px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-semibold tracking-wide text-[10px]"
+              >
+                {{ activeConversation.other_user_role | uppercase }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            class="w-10 h-10 rounded-full bg-[#1C1F2E] flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+              />
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="w-10 h-10 rounded-full bg-[#1C1F2E] flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+              />
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="w-10 h-10 rounded-full bg-[#1C1F2E] flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Messages -->
+      <div
+        class="flex-1 overflow-y-auto p-6 flex flex-col custom-scrollbar bg-[#0A0C14]"
+      >
+        <div class="flex justify-center mb-4">
+          <span
+            class="px-4 py-1.5 rounded-full bg-[#1C1F2E] text-xs text-white/70 font-medium"
+            >Today</span
+          >
+        </div>
+
+        <div
+          *ngFor="let msg of messages; let i = index"
+          class="flex w-full"
+          [ngClass]="[
+               msg.sender_id === currentUserId ? 'justify-end' : 'justify-start',
+               (messages[i-1] && messages[i-1].sender_id === msg.sender_id) ? 'mt-1' : 'mt-4'
+             ]"
+        >
+          <div
+            class="flex gap-2.5 max-w-[65%]"
+            [ngClass]="msg.sender_id === currentUserId ? 'flex-row-reverse' : 'flex-row'"
+          >
+            <!-- Avatar: only on last message of a consecutive group -->
+            <div
+              class="w-7 h-7 shrink-0"
+              [ngClass]="(!messages[i+1] || messages[i+1].sender_id !== msg.sender_id) ? '' : 'invisible'"
+            >
+              <div
+                class="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-medium text-[11px] shadow-sm"
+              >
+                {{ (msg.sender_id === currentUserId ? 'Me' :
+                (activeConversation.other_user_name ||
+                'U')).charAt(0).toUpperCase() }}
+              </div>
+            </div>
+
+            <div
+              class="px-4 py-2.5 rounded-[20px]"
+              [ngClass]="[
+                   msg.sender_id === currentUserId
+                     ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-950/40'
+                     : 'bg-[#1C1F2E] text-white/90',
+                   msg.sender_id === currentUserId
+                     ? ((!messages[i+1] || messages[i+1].sender_id !== msg.sender_id) ? 'rounded-br-md' : 'rounded-tr-md')
+                     : ((!messages[i+1] || messages[i+1].sender_id !== msg.sender_id) ? 'rounded-bl-md' : 'rounded-tl-md')
+                 ]"
+            >
+              <p class="text-[14px] leading-relaxed break-words">
+                {{ msg.message }}
+              </p>
+
+              <div
+                class="flex items-center gap-1 mt-1"
+                [ngClass]="msg.sender_id === currentUserId ? 'justify-end' : 'justify-start'"
+              >
+                <span
+                  class="text-[10px]"
+                  [ngClass]="msg.sender_id === currentUserId ? 'text-white/70' : 'text-white/40'"
+                >
+                  {{ msg.created_at | date:'shortTime' }}
+                </span>
+                <svg
+                  *ngIf="msg.sender_id === currentUserId"
+                  class="w-3.5 h-3.5"
+                  [ngClass]="msg.status === 'READ' ? 'text-sky-300' : 'text-white/50'"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M5 13l4 4L19 7"
+                  />
+                  <path
+                    *ngIf="msg.status === 'READ'"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M5 18l4 4L19 12"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Typing indicator bubble -->
+        <div *ngIf="isTyping" class="flex w-full justify-start mt-4">
+          <div class="flex gap-2.5 max-w-[65%]">
+            <div
+              class="w-7 h-7 shrink-0 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-medium text-[11px] shadow-sm"
+            >
+              {{ (activeConversation.other_user_name ||
+              'U').charAt(0).toUpperCase() }}
+            </div>
+            <div
+              class="px-4 py-3 rounded-[20px] rounded-bl-md bg-[#1C1F2E] flex items-center gap-1"
+            >
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input -->
+      <div class="p-5 bg-[#10121A] border-t border-white/5">
+        <div
+          class="flex items-center gap-2 rounded-full p-2 pl-4"
+          style="background-color: #1c1f2e"
+        >
+          <button
+            type="button"
+            class="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors shrink-0"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            class="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors shrink-0"
+          >
+            <svg
+              class="w-5 h-5 -rotate-45"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
+              />
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            class="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors shrink-0"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </button>
+
+          <input
+            [(ngModel)]="newMessage"
+            (input)="onTyping()"
+            (keyup.enter)="sendMessage()"
+            type="text"
+            placeholder="Type a message..."
+            style="color: #fff; background-color: transparent"
+            class="flex-1 border-none placeholder-white/40 focus:outline-none focus:ring-0 px-2 text-[14px] min-w-0"
+          />
+
+          <button
+            type="button"
+            (click)="sendMessage()"
+            [disabled]="!newMessage.trim()"
+            class="w-11 h-11 rounded-full flex items-center justify-center shrink-0 transition-all"
+            [ngClass]="newMessage.trim()
+              ? 'bg-indigo-500 hover:bg-indigo-400 text-white shadow-lg shadow-indigo-500/30'
+              : 'bg-white/10 text-white/30 cursor-not-allowed'"
+          >
+            <svg
+              class="w-4.5 h-4.5 ml-0.5 rotate-45"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

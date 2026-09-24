@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpInterceptorFn } from "@angular/common/http";
+import { HttpErrorResponse, HttpInterceptorFn, HttpRequest, HttpHandlerFn, HttpEvent } from "@angular/common/http";
 import { inject } from "@angular/core";
 import { AuthService } from "../services/auth.service";
 import {
@@ -8,6 +8,7 @@ import {
   BehaviorSubject,
   filter,
   take,
+  Observable,
 } from "rxjs";
 
 let isRefreshing = false;
@@ -30,16 +31,27 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         error instanceof HttpErrorResponse &&
         error.status === 401 &&
         !authReq.url.includes("/auth/login") &&
-        !authReq.url.includes("/auth/refresh")
+        !authReq.url.includes("/auth/refresh") &&
+        !authReq.url.includes("/auth/logout")
       ) {
         return handle401Error(authReq, next, authService);
       }
+      
+      // If it's a 401 and we are not handling it (e.g., login or refresh failed), force logout
+      if (error instanceof HttpErrorResponse && error.status === 401) {
+         authService.forceLogout();
+      }
+
       return throwError(() => error);
     }),
   );
 };
 
-function handle401Error(request: any, next: any, authService: AuthService) {
+function handle401Error(
+  request: HttpRequest<unknown>,
+  next: HttpHandlerFn,
+  authService: AuthService
+): Observable<HttpEvent<unknown>> {
   if (!isRefreshing) {
     isRefreshing = true;
     refreshTokenSubject.next(null);

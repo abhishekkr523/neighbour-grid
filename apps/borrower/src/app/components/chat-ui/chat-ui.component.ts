@@ -20,6 +20,8 @@ import { Subscription } from "rxjs";
 export class ChatUIComponent implements OnInit, OnDestroy {
   @Input() ownerId!: string;
   @Input() borrowerId!: string;
+  @Input() reservationId!: string;
+  @Input() toolId!: string;
 
   conversation: Conversation | null = null;
   messages: Message[] = [];
@@ -57,7 +59,8 @@ export class ChatUIComponent implements OnInit, OnDestroy {
       this.chatService.typingStarted$.subscribe((event: any) => {
         if (
           this.conversation &&
-          event.conversationId === this.conversation.id &&
+          event.conversationId ===
+            `rental_${this.conversation.reservation_id}` &&
           event.userId !== this.borrowerId
         ) {
           this.isTyping = true;
@@ -69,7 +72,8 @@ export class ChatUIComponent implements OnInit, OnDestroy {
       this.chatService.typingStopped$.subscribe((event: any) => {
         if (
           this.conversation &&
-          event.conversationId === this.conversation.id &&
+          event.conversationId ===
+            `rental_${this.conversation.reservation_id}` &&
           event.userId !== this.borrowerId
         ) {
           this.isTyping = false;
@@ -79,14 +83,22 @@ export class ChatUIComponent implements OnInit, OnDestroy {
   }
 
   loadConversation() {
-    this.chatService.getConversation(this.borrowerId, this.ownerId).subscribe({
-      next: (conv: Conversation) => {
-        this.conversation = conv;
-        this.chatService.joinConversation(conv.id);
-        this.loadMessages();
-      },
-      error: (err: any) => console.error("Failed to load conversation", err),
-    });
+    if (!this.reservationId || !this.toolId) return;
+    this.chatService
+      .getConversation(
+        this.reservationId,
+        this.toolId,
+        this.borrowerId,
+        this.ownerId,
+      )
+      .subscribe({
+        next: (conv: Conversation) => {
+          this.conversation = conv;
+          this.chatService.joinConversation(conv.reservation_id);
+          this.loadMessages();
+        },
+        error: (err: any) => console.error("Failed to load conversation", err),
+      });
   }
 
   loadMessages() {
@@ -101,16 +113,21 @@ export class ChatUIComponent implements OnInit, OnDestroy {
   }
 
   sendMessage() {
+    console.log("Sending message:", this.newMessage);
     if (!this.newMessage.trim() || !this.conversation) return;
 
-    this.chatService.sendMessage(this.conversation.id, this.newMessage);
+    this.chatService.sendMessage(
+      this.conversation.reservation_id,
+      this.conversation.id,
+      this.newMessage,
+    );
     this.newMessage = "";
     this.stopTyping();
   }
 
   onTyping() {
     if (!this.conversation) return;
-    this.chatService.typingStarted(this.conversation.id);
+    this.chatService.typingStarted(this.conversation.reservation_id);
 
     clearTimeout(this.typingTimeout);
     this.typingTimeout = setTimeout(() => {
@@ -120,7 +137,7 @@ export class ChatUIComponent implements OnInit, OnDestroy {
 
   stopTyping() {
     if (this.conversation) {
-      this.chatService.typingStopped(this.conversation.id);
+      this.chatService.typingStopped(this.conversation.reservation_id);
     }
   }
 

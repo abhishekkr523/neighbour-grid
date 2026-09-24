@@ -45,4 +45,9 @@ export const appRoutes: Routes = [
         exposedModule: "./Routes",
       }).then((m) => m.appRoutes ?? m.AppComponent),
   },
+  {
+    path: "chat",
+    loadComponent: () =>
+      import("@neighbour-grid/chat").then((m) => m.Chat),
+  }
 ];

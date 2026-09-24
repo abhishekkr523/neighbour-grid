@@ -1,8 +1,9 @@
 import { Component } from "@angular/core";
-import { RouterModule, RouterOutlet } from "@angular/router";
+import { RouterModule, RouterOutlet, Router, Event, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { AuthService } from "./services/auth.service";
 import { SpinnerComponent } from "./components/spinner/spinner.component";
+import { LoaderService } from "./services/loader.service";
 
 @Component({
   imports: [CommonModule, RouterModule, RouterOutlet, SpinnerComponent],
@@ -11,7 +12,24 @@ import { SpinnerComponent } from "./components/spinner/spinner.component";
   styleUrl: "./app.scss",
 })
 export class App {
-  constructor(public authService: AuthService) {}
+  constructor(
+    public authService: AuthService,
+    private router: Router,
+    private loaderService: LoaderService
+  ) {
+    this.router.events.subscribe((event: Event) => {
+      if (event instanceof NavigationStart) {
+        this.loaderService.show();
+      }
+      if (
+        event instanceof NavigationEnd ||
+        event instanceof NavigationCancel ||
+        event instanceof NavigationError
+      ) {
+        this.loaderService.hide();
+      }
+    });
+  }
 
   activeRole: "borrower" | "owner" | "admin" = "borrower";
   locationLabel = "Indiranagar, Sector 4";

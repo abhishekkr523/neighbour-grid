@@ -50,36 +50,43 @@ export class ChatService {
   }
 
   // REST API Calls
-  getConversations(): Observable<Conversation[]> {
-    return this.http.get<Conversation[]>(`${this.apiUrl}/conversations`);
+  private getHeaders() {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('ng_token') : null;
+    return {
+      headers: { Authorization: `Bearer ${token}` }
+    };
   }
 
-  getConversation(borrowerId: string, ownerId: string): Observable<Conversation> {
-    return this.http.post<Conversation>(`${this.apiUrl}/conversations`, { borrowerId, ownerId });
+  getConversations(): Observable<Conversation[]> {
+    return this.http.get<Conversation[]>(`${this.apiUrl}/conversations`, this.getHeaders());
+  }
+
+  getConversation(reservationId: string, toolId: string, borrowerId: string, ownerId: string): Observable<Conversation> {
+    return this.http.post<Conversation>(`${this.apiUrl}/conversations`, { reservationId, toolId, borrowerId, ownerId }, this.getHeaders());
   }
 
   getMessages(conversationId: string, page: number = 1): Observable<Message[]> {
-    return this.http.get<Message[]>(`${this.apiUrl}/conversations/${conversationId}/messages?page=${page}`);
+    return this.http.get<Message[]>(`${this.apiUrl}/conversations/${conversationId}/messages?page=${page}`, this.getHeaders());
   }
 
   markAsRead(conversationId: string): Observable<any> {
-    return this.http.put(`${this.apiUrl}/messages/${conversationId}/read`, {});
+    return this.http.put(`${this.apiUrl}/messages/${conversationId}/read`, {}, this.getHeaders());
   }
 
   // WebSocket Emit Actions
-  joinConversation(conversationId: string) {
-    this.wsService.send('join_conversation', conversationId);
+  joinConversation(reservationId: string) {
+    this.wsService.send('join_conversation', `rental_${reservationId}`);
   }
 
-  sendMessage(conversationId: string, message: string) {
-    this.wsService.send('send_message', { conversationId, message });
+  sendMessage(reservationId: string, conversationId: string, message: string) {
+    this.wsService.send('send_message', { room: `rental_${reservationId}`, conversationId, message });
   }
 
-  typingStarted(conversationId: string) {
-    this.wsService.send('typing_started', conversationId);
+  typingStarted(reservationId: string) {
+    this.wsService.send('typing_started', `rental_${reservationId}`);
   }
 
-  typingStopped(conversationId: string) {
-    this.wsService.send('typing_stopped', conversationId);
+  typingStopped(reservationId: string) {
+    this.wsService.send('typing_stopped', `rental_${reservationId}`);
   }
 }

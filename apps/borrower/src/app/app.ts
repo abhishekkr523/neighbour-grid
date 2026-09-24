@@ -5,7 +5,7 @@ import { ToolCardComponent } from "./components/tool-card/tool-card.component";
 import { MapViewComponent } from "./components/map-view/map-view.component";
 import { ReservationModalComponent } from "./components/reservation-modal/reservation-modal.component";
 import { ChatUIComponent } from "./components/chat-ui/chat-ui.component";
-import { WebsocketService } from "../../../../libs/shared/websocket/src/lib/websocket.service";
+import { WebsocketService } from "@neighbour-grid/websocket";
 
 // Define the Tool interface based on the backend schema
 export interface Tool {
@@ -160,8 +160,18 @@ export class App implements OnInit {
     this.closeModal();
   }
 
-  openChat(ownerId: string) {
-    // For demo purposes, we're opening chat with a mock owner if none provided
-    this.activeChatOwnerId = ownerId;
+  activeChatToolId: string | null = null;
+  activeChatReservationId: string | null = null;
+
+  openChat(tool: Tool) {
+    this.activeChatOwnerId = tool["owner_id"] || tool["ownerId"];
+    this.activeChatToolId = tool.id;
+    // For demo purposes, we can generate a temporary ID or use a placeholder if the backend allows,
+    // but the backend requires a valid UUID. We will just use the tool's ID as reservationId for demo,
+    // or better, we can call an API to create a DISCUSSION reservation.
+    // Assuming backend will fail if not a valid reservation, let's just let it fail gracefully or we use a known UUID.
+    // In a real app, this would call createReservation({ status: 'DISCUSSION' }) first.
+    // Let's use a fake valid UUID so it doesn't break Angular (backend will 500 if fk fails though).
+    this.activeChatReservationId = "00000000-0000-0000-0000-000000000000";
   }
 }

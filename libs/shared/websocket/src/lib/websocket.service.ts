@@ -78,6 +78,12 @@ export class WebsocketService implements OnDestroy {
   }
 
   send(event: string, data?: any): void {
+    console.log("WebSocketService sending event:", event, data);
+    console.log(
+      "WebSocketService socket state:",
+      this.socket,
+      this.socket?.connected,
+    );
     if (this.socket && this.socket.connected) {
       this.socket.emit(event, data);
     } else {

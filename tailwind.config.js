@@ -5,6 +5,7 @@ module.exports = {
     "./apps/borrower/src/**/*.{html,ts,scss}",
     "./apps/owner/src/**/*.{html,ts,scss}",
     "./apps/admin/src/**/*.{html,ts,scss}",
+    "./libs/**/*.{html,ts,scss,mjs}",
   ],
   darkMode: 'class',
   theme: {

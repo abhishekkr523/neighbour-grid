@@ -42,7 +42,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
 
     this.subs.add(
       this.chatService.typingStarted$.subscribe((event: any) => {
-        if (this.activeConversation && event.conversationId === this.activeConversation.id && event.userId !== this.ownerId) {
+        if (this.activeConversation && event.conversationId === `rental_${this.activeConversation.reservation_id}` && event.userId !== this.ownerId) {
           this.isTyping = true;
         }
       })
@@ -50,7 +50,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
 
     this.subs.add(
       this.chatService.typingStopped$.subscribe((event: any) => {
-        if (this.activeConversation && event.conversationId === this.activeConversation.id && event.userId !== this.ownerId) {
+        if (this.activeConversation && event.conversationId === `rental_${this.activeConversation.reservation_id}` && event.userId !== this.ownerId) {
           this.isTyping = false;
         }
       })
@@ -67,7 +67,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
   selectConversation(conv: Conversation) {
     this.activeConversation = conv;
     conv.unread_count = 0;
-    this.chatService.joinConversation(conv.id);
+    this.chatService.joinConversation(conv.reservation_id);
     this.loadMessages();
   }
 
@@ -85,14 +85,14 @@ export class ChatPageComponent implements OnInit, OnDestroy {
   sendMessage() {
     if (!this.newMessage.trim() || !this.activeConversation) return;
     
-    this.chatService.sendMessage(this.activeConversation.id, this.newMessage);
+    this.chatService.sendMessage(this.activeConversation.reservation_id, this.activeConversation.id, this.newMessage);
     this.newMessage = '';
     this.stopTyping();
   }
 
   onTyping() {
     if (!this.activeConversation) return;
-    this.chatService.typingStarted(this.activeConversation.id);
+    this.chatService.typingStarted(this.activeConversation.reservation_id);
     
     clearTimeout(this.typingTimeout);
     this.typingTimeout = setTimeout(() => {
@@ -102,7 +102,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
 
   stopTyping() {
     if (this.activeConversation) {
-      this.chatService.typingStopped(this.activeConversation.id);
+      this.chatService.typingStopped(this.activeConversation.reservation_id);
     }
   }
 

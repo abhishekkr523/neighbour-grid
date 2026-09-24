@@ -1,7 +1,14 @@
 export interface Conversation {
   id: string;
+  reservation_id: string;
+  tool_id: string;
+  tool_title?: string;
+  tool_is_active?: boolean;
+  tool_deleted_at?: string;
+  rental_status?: string;
   borrower_id: string;
   owner_id: string;
+  status: string;
   other_user_name: string;
   other_user_role: string;
   last_message: string;

@@ -83,9 +83,14 @@ export class AuthService {
     this.router.navigate(["/"]);
   }
 
+  forceLogout() {
+    this.clearState();
+  }
+
   private clearState() {
     localStorage.removeItem("ng_token");
     localStorage.removeItem("ng_user");
+    localStorage.removeItem("ng_refresh_token");
     this.isAuthenticated.set(false);
     this.currentUser.set(null);
     this.router.navigate(["/login"]);
